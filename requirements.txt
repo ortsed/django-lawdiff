@@ -1,0 +1,8 @@
+django
+-e git+git@github.com:ortsed/django-jsonmirror.git#egg=django-jsonmirror
+-e git+git@github.com:ortsed/django-wordiff.git#egg=django-wordiff
+sunlight
+pyPdf
+BeautifulSoup
+South
+-e git+git@github.com:theatlantic/django-sentry.git#egg=django-sentry

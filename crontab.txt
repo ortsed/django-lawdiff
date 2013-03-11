@@ -1,0 +1,5 @@
+/www/lawdiff/bin/python /www/lawdiff/manage.py update_all_json_feeds
+/www/lawdiff/bin/python /www/lawdiff/manage.py get_bill_details
+/www/lawdiff/bin/python /www/lawdiff/manage.py convert_bill_text
+
+

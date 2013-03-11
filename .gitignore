@@ -1,0 +1,12 @@
+*.pyc
+*.pid
+src
+media
+static
+bin
+include
+lib
+lib64
+build
+site-packages
+settings_local.py
