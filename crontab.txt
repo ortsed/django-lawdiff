@@ -1,5 +1,6 @@
-/www/lawdiff/bin/python /www/lawdiff/manage.py update_all_json_feeds
-/www/lawdiff/bin/python /www/lawdiff/manage.py get_bill_details
-/www/lawdiff/bin/python /www/lawdiff/manage.py convert_bill_text
+*/10 * * * * /www/lawdiff/bin/python /www/lawdiff/manage.py convert_bill_text
+*/20 * * * * /www/lawdiff/bin/python /www/lawdiff/manage.py ngram_bill_text
 
+*/30 * * * * /www/lawdiff/bin/python /www/lawdiff/manage.py get_bill_details
+0 1 * * * /www/lawdiff/bin/python /www/lawdiff/manage.py update_all_json_feeds
 

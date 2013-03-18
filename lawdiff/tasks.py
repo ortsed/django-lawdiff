@@ -2,8 +2,10 @@ from jsonmirror.models import JSON_Archive, JSON_Archive_Set
 import json
 import sunlight
 import urllib
+import mimetypes
 from lawdiff.models import Bill, Bill_File
 from django.core.files.base import ContentFile
+from HTMLParser import HTMLParser
 
 import pyPdf
 from pyPdf.utils import PdfReadError
@@ -38,14 +40,15 @@ def get_bill_details():
 		
 			if bill["documents"]:
 				f = urllib.urlopen(bill["documents"][0]["url"])
-				contents = f.read()
-				file_name = f.url.split("/")[-1]
-				f.close()
+				if f.getcode() == 200:
+					contents = f.read()
+					file_name = f.url.split("/")[-1]
+					f.close()
 			
-				file_contents = ContentFile(contents)
-				bill_file.file.save(file_name, file_contents, save=True)
+					file_contents = ContentFile(contents)
+					bill_file.file.save(file_name, file_contents, save=True)
 				
-				bill_file.save()
+					bill_file.save()
 			json_object.parsed = True	
 			json_object.save()
 		except:
@@ -73,21 +76,45 @@ def fixPdf(pdfFile):
 		return "Fixed"
 	except Exception, e:
 		sentry_client.create_from_exception(exc_info=sys.exc_info(), data={})
-	
+
+
+class MLStripper(HTMLParser):
+	def __init__(self):
+		self.reset()
+		self.fed = []
+	def handle_data(self, d):
+		self.fed.append(d)
+	def get_data(self):
+		return ''.join(self.fed)
+
+def strip_tags(path):
+	f = file(path, "rb")
+	html = f.read()
+	f.close()
+	s = MLStripper()
+	s.feed(html)
+	return s.get_data()	
+
+
 def convert_bill_text():
 
 	bill_files = Bill_File.objects.filter(converted_bill_text="")[0:20]
 	
 	for bill_file in bill_files:
+		mtype = mimetypes.guess_type(bill_file.file.path)[0]
 		try:
-			bill_file.converted_bill_text = convert_pdf(bill_file.file.path)
+			if mtype == "application/pdf":
+				bill_file.converted_bill_text = convert_pdf(bill_file.file.path)
+			elif mtype == "text/html":
+				bill_file.converted_bill_text = strip_tags(bill_file.file.path)
 			bill_file.save()
 		except PdfReadError:
 			fixPdf(bill_file.file.path)	
 		except:
 			sentry_client.create_from_exception(exc_info=sys.exc_info(), data={})	
+			
 def ngram_bill_text():
-	bill_files = Bill_File.objects.filter(parsed=False)[0:20]
+	bill_files = Bill_File.objects.filter(parsed=False).exclude(converted_bill_text="")[0:20]
 	for bill_file in bill_files:
 		try:
 			gram_parse_object_text(bill_file, bill_file.converted_bill_text)
@@ -96,5 +123,5 @@ def ngram_bill_text():
 		except:
 			sentry_client.create_from_exception(exc_info=sys.exc_info(), data={})
 
-	
-	
+
+
