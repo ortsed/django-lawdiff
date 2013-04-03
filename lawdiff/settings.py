@@ -1,7 +1,7 @@
 import sys
 sys.path.append("/usr/lib64/python2.6/site-packages")
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["lawdiff", ".lawdiff.org",]
+ALLOWED_HOSTS = ["lawdiff", ".lawdiff.org", "127.0.0.1:8000"]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

@@ -1,14 +1,15 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-from wordiff.models import GramRankings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from wordiff.models import ObjectGram
+
 def index(request):
-	rankings_list = GramRankings.objects.all().order_by("-date_created")
+	ngrams = ObjectGram.objects.filter(rank__gt=1).order_by("-date_created")
 	try:
 		page = request.GET.get("page")
 	except:
 		page = 1
-	paginator = Paginator(rankings_list, 10)
+	paginator = Paginator(ngrams, 10)
 
 	try:
 		rankings = paginator.page(page)
