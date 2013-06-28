@@ -4,7 +4,7 @@ from jsonmirror.models import JSON_Archive
 
 class Bill(models.Model):
 
-	json_archive = models.ForeignKey(JSON_Archive, null=False, blank=False)
+	json_archive = models.ForeignKey(JSON_Archive, null=False, blank=False, unique=True)
 	
 	json_details = models.TextField(blank=True, null=False)
 	
