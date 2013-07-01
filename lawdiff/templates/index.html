@@ -12,7 +12,17 @@ Lawdiff
 	<ul>
 {% for ranking in rankings %}
 
-		<li>{{ ranking.gram }}</li>	
+		<li>
+		
+			<h2>{{ ranking.gram }}</h2>
+			<ul>
+			{% for gram in ranking.similar_objects %}
+			
+				<li>{{ gram.object.bill.title }}</li>
+		
+			{% endfor %}
+			</ul>
+		</li>	
 
 
 {% endfor %}

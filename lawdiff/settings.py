@@ -120,7 +120,7 @@ INSTALLED_APPS = (
 	'south',
 	'sentry',
 	'sentry.client',
-	'gunicorn',
+#	'gunicorn',
 )
 
 import logging

@@ -1,5 +1,5 @@
 from django.db import models
-
+import json
 from jsonmirror.models import JSON_Archive
 
 class Bill(models.Model):
@@ -10,6 +10,14 @@ class Bill(models.Model):
 	
 	def __unicode__(self):
 		return u"%s" % self.json_archive.__unicode__()
+		
+	@property
+	def bill_details(self):
+		return json.loads(self.json_details)
+		
+	@property
+	def title(self):
+		return self.bill_details["title"]
 	
 class Bill_File(models.Model):
 
