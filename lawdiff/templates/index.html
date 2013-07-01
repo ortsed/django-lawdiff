@@ -3,18 +3,18 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Lawdiff</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/all.css" />
 </head>
 <body>
 
 
-Lawdiff 
 
 	<ul>
 {% for ranking in rankings %}
 
 		<li>
 		
-			<h2>{{ ranking.gram }}</h2>
+			<h2>{{ ranking.gram }} {% if is_user %}<a href="#">[ignore]</a>{% endif %}</h2>
 			<ul>
 			{% for gram in ranking.similar_objects %}
 			

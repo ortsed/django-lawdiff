@@ -18,4 +18,4 @@ def index(request):
 	except EmptyPage:
 		paginator.page(paginator.num_pages)
 
-	return render_to_response("index.html", {"rankings": rankings})
+	return render_to_response("index.html", {"rankings": rankings, "is_user": request.user.is_authenticated() })

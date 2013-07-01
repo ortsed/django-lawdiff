@@ -1,7 +1,7 @@
 *.pyc
 *.pid
 src
-media
+media/
 static
 bin
 include
