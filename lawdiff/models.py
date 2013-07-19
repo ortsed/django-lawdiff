@@ -18,6 +18,10 @@ class Bill(models.Model):
 	@property
 	def title(self):
 		return self.bill_details["title"]
+
+	@property
+	def state(self):
+		return self.bill_details["state"]
 	
 class Bill_File(models.Model):
 
