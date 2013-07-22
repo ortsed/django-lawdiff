@@ -22,40 +22,40 @@ def get_bill_details():
 	json_objects = JSON_Archive.objects.filter(parsed=False)
 	
 	for json_object in json_objects:
+
+		json_object_content = json.loads(json_object.content)
+		bill = sunlight.openstates.bill(
+			bill_id=json_object_content["id"],
+		)
+	
+		bill = sunlight.openstates.bill(bill_id=json_object_content["id"],)
 		try:
-			json_object_content = json.loads(json_object.content)
-			bill = sunlight.openstates.bill(
-				bill_id=json_object_content["id"],
-			)
-		
-			bill = sunlight.openstates.bill(bill_id=json_object_content["id"],)
+			old_bill = Bill.objects.get(json_archive_id=json_object.id)
+		except Bill.DoesNotExist:
 			try:
-				old_bill = Bill.objects.get(json_archive_id=json_object.id)
-			except Bill.DoesNotExist:
-				try:
-					local_bill = Bill()
-					local_bill.json_details = json.dumps(bill)
-					local_bill.json_archive = json_object
-					local_bill.save()
-			
-					bill_file = Bill_File()
-					bill_file.bill = local_bill
-			
-					if bill["documents"]:
-						f = urllib.urlopen(bill["documents"][0]["url"])
-						if f.getcode() == 200:
-							contents = f.read()
-							file_name = f.url.split("/")[-1]
-							f.close()
+				local_bill = Bill()
+				local_bill.json_details = json.dumps(bill)
+				local_bill.json_archive = json_object
+				local_bill.save()
+		
+				bill_file = Bill_File()
+				bill_file.bill = local_bill
+		
+				if bill["documents"]:
+					f = urllib.urlopen(bill["documents"][0]["url"])
+					if f.getcode() == 200:
+						contents = f.read()
+						file_name = f.url.split("/")[-1]
+						f.close()
+				
+						file_contents = ContentFile(contents)
+						bill_file.file.save(file_name, file_contents, save=True)
 					
-							file_contents = ContentFile(contents)
-							bill_file.file.save(file_name, file_contents, save=True)
-						
-							bill_file.save()
-					json_object.parsed = True	
-					json_object.save()
-				except:
-					sentry_client.create_from_exception(exc_info=sys.exc_info(), data={})
+						bill_file.save()
+				json_object.parsed = True	
+				json_object.save()
+			except:
+				sentry_client.create_from_exception(exc_info=sys.exc_info(), data={})
 	
 def convert_pdf(path):
 	content = ""
